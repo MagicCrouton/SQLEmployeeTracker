@@ -5,22 +5,21 @@ USE employee_db;
 
 CREATE TABLE department (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  dept_name VARCHAR(30)
+  dept_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE job (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(30) NOT NULL,
-  salary VARCHAR DECIMAL,
-  FOREIGN KEY (department_id)
-  REFERENCES department(id)
+  salary DECIMAL,
+  department_id INT,
+  FOREIGN KEY (department_id) REFERENCES department(id)
 );
 
 CREATE TABLE employee (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    first_name VARCHAR(30),
    last_name VARCHAR(30),
-   manager_id = id,
-   FOREIGN KEY (job_id),
-   REFERENCES job(id),
-)
+   job_id INT,
+   FOREIGN KEY (job_id) REFERENCES job(id)
+);
