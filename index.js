@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const inquirer =require('inquirer');
-const tableDisplay = require('console.table');
+const cTable = require('console.table');
 
 const db = mysql.createConnection(
     {
@@ -14,4 +14,5 @@ const db = mysql.createConnection(
   },
   console.log(`Connected to the database.`)
 )
+
 
