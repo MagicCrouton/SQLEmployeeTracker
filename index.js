@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const inquirer =require('inquirer');
 const cTable = require('console.table');
-const questionIndex = require('./utlilities/questionIndex')
+const utilities = require('./utlilities/questionStorage.js');
 require('dotenv').config();
 
 const db = mysql.createConnection(
@@ -26,7 +26,7 @@ function viewDept() {
  }) 
  }
 // function for view all roles
-function viewRoles() {
+async function viewRoles() {
   db.query('SELECT * FROM role', function (err, results) {
    if (err) {
      console.log(err)
@@ -34,15 +34,21 @@ function viewRoles() {
    else{
      console.table(results);
    }
- }) 
+ })
  }
 // function for view all employees
-function viewEmployees() {
+async function viewEmployees() {
  db.query('SELECT * FROM employee', function (err, results) {
   if (err) {
     console.log(err)
   }
   else{
+    // await
+    // let rolTemp = db.promise().query('SELECT * FROM role')
+    // results.forEach((element) => {
+    //   let tempIndex = findIndex(rolTemp, rolTemp.id === element.role_id)
+    //   element.role_id = rolTemp[tempIndex].title;
+    // })
     console.table(results);
   }
 }) 
@@ -52,7 +58,7 @@ async function addRole(roleInput) {
  await inquirer.prompt(utilities.questionIndex.addroleQ)
  }
 // function for add an employee
-async function addEmployee(employeeInput) {
+async function addEmployee(firstName, lastName,) {
   await inquirer.prompt(utilities.questionIndex.addEmployeeQ)
 }
 // function for update employee role
@@ -60,4 +66,35 @@ async function updateEmployeeRole(roleInput) {
   await inquirer.prompt(utilities.questionIndex.updateEmployeeRoleQ)
 }
 
+async function init () {
+inquirer.prompt(utilities.questionIndex.initialQ).then(async (response) => {
+  if (response.nextItem === 'View departments') {
+    await viewDept();
+    init();
+  }
+  else if (response.nextItem === 'View Roles') {
+    await viewRoles();
+    init();
+  }
+  else if (response.nextItem === 'View Employees') {
+    await viewEmployees();
+    init();
+  }
+  else if (response.nextItem === 'add a new role') {
+    await addRole();
+    init();
+  }
+  else if (response.nextItem === 'add a new employee') {
+    await addEmployee();
+    init();
+  }
+  else if (response.nextItem === 'update an Employees Role') {
+    await updateEmployeeRole();
+    init();
+  }
+  else {
+    console.log('oops something went wrong');
+  }
+  })}
 
+  init();
