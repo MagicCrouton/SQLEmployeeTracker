@@ -9,6 +9,8 @@ const schemaStage = fs.readFileSync("./db/schema.sql", {
 const seedStage = fs.readFileSync("./db/seed.sql", {
   encoding: "utf-8",
 })
+console.log(schemaStage);
+console.log(seedStage);
 
 const db = mysql.createConnection(
     {
@@ -21,7 +23,8 @@ const db = mysql.createConnection(
 )
 
 // run schema
-db.query(schemaStage, function (err, results){
+
+db.execute(schemaStage, function (err, results){
     if (err) {
         console.log(err)
     }
@@ -29,18 +32,17 @@ db.query(schemaStage, function (err, results){
         console.log(results)}
 })
 
-const seeddb = mysql.createConnection(
-    {
-    host: `${process.env.db_host}`,
-    user: `${process.env.user_name}`,
-    password: `${process.env.sql_PW}`,
-    database: `${process.env.db}`
-  },
-  console.log(`Connected to the database.`)
+const dbSeed = mysql.createConnection(
+  {
+  host: `${process.env.db_host}`,
+  user: `${process.env.user_name}`,
+  password: `${process.env.sql_PW}`,
+  database: `${process.env.db}`
+},
+console.log(`Connected to the database.`)
 )
-
 // run seed
-seeddb.query(seedStage, function (err, results){
+dbSeed.execute(seedStage, function (err, results){
     if (err) {
         console.log(err)
     }
