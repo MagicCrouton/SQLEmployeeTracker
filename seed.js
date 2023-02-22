@@ -13,32 +13,28 @@ const seedStage = fs.readFileSync("./db/seed.sql", {
 
 const db = mysql.createConnection(
     {
-    host: 'localhost',
-    // MySQL username,
-    user: 'root',
-    // MySQL password
-    password: 'Kiow@',
-    database: 'employee_db'
+    host: `${process.env.db_host}`,
+    user: `${process.env.user_name}`,
+    password: `${process.env.sql_PW}`,
+    database: `${process.env.db}`
   },
   console.log(`Connected to the database.`)
 )
 
-db.connect()
+// run schema
+db.query(schemaStage, function (err, results){
+    if (err) {
+        console.log(err)
+    }
+    else {
+        console.log(results)}
+})
 
-// Generate random password for initial admin user
-const psw = Math.random()
-  .toString(36)
-  .substring(2)
-const hash = bcrypt.hashSync(psw, 10)
-
-console.log("Running SQL seed...")
-
-// Run seed query
-connection.query(seedQuery, [hash], err => {
-  if (err) {
-    throw err
-  }
-
-  console.log("SQL seed completed! Password for initial admin account: " + psw)
-  connection.end()
+// run seed
+db.query(seedStage, function (err, results){
+    if (err) {
+        console.log(err)
+    }
+    else {
+        console.log(results)}
 })
