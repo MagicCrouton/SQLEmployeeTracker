@@ -11,7 +11,8 @@ const questionIndex = {
         'View Employees', 
         'add a new role', 
         'add a new employee',
-        'update an Employees Role']
+        'update an Employees Role',
+        'quit']
     }],
     addRollQ: [],
     addEmployeeQ: [],

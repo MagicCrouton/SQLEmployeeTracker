@@ -2,6 +2,7 @@ const mysql = require('mysql2');
 const inquirer =require('inquirer');
 const cTable = require('console.table');
 const utilities = require('./utlilities/questionStorage.js');
+// var endProgram = false;
 require('dotenv').config();
 
 const db = mysql.createConnection(
@@ -21,7 +22,9 @@ function viewDept() {
      console.log(err)
    }
    else{
+     console.log('\n');
      console.table(results);
+     console.log('\n');
    }
  }) 
  }
@@ -32,7 +35,9 @@ async function viewRoles() {
      console.log(err)
    }
    else{
+    console.log('\n');
      console.table(results);
+     console.log('\n');
    }
  })
  }
@@ -43,58 +48,76 @@ async function viewEmployees() {
     console.log(err)
   }
   else{
-    // await
-    // let rolTemp = db.promise().query('SELECT * FROM role')
-    // results.forEach((element) => {
-    //   let tempIndex = findIndex(rolTemp, rolTemp.id === element.role_id)
-    //   element.role_id = rolTemp[tempIndex].title;
-    // })
+    console.log('\n');
     console.table(results);
+    console.log('\n');
   }
 }) 
 }
 // function for add a role
-async function addRole(roleInput) {
+async function addRole() {
  await inquirer.prompt(utilities.questionIndex.addroleQ)
  }
 // function for add an employee
-async function addEmployee(firstName, lastName,) {
+async function addEmployee() {
   await inquirer.prompt(utilities.questionIndex.addEmployeeQ)
 }
 // function for update employee role
-async function updateEmployeeRole(roleInput) {
+async function updateEmployeeRole() {
   await inquirer.prompt(utilities.questionIndex.updateEmployeeRoleQ)
 }
 
-async function init () {
-inquirer.prompt(utilities.questionIndex.initialQ).then(async (response) => {
+const runProgram = async () => {
+let endProgram = false;
+while (endProgram===false)
+await inquirer.prompt(utilities.questionIndex.initialQ).then(async (response) => {
   if (response.nextItem === 'View departments') {
     await viewDept();
-    init();
   }
   else if (response.nextItem === 'View Roles') {
     await viewRoles();
-    init();
   }
   else if (response.nextItem === 'View Employees') {
     await viewEmployees();
-    init();
   }
   else if (response.nextItem === 'add a new role') {
     await addRole();
-    init();
   }
   else if (response.nextItem === 'add a new employee') {
     await addEmployee();
-    init();
   }
   else if (response.nextItem === 'update an Employees Role') {
     await updateEmployeeRole();
-    init();
+  }
+  else if (response.nextItem === 'quit') {
+    endProgram = true;
+    console.log('byeee');
+    process.exit();
   }
   else {
-    console.log('oops something went wrong');
+    console.log('you broke it, big sad :(');
   }
   })}
 
-  init();
+  // const runProgram = async () => {
+  //   while(endProgram === false) {
+  //     choicePrompt();
+  //   }
+  // }
+// async function init(endProgram) {
+//     await choicePrompt();
+//     if (endProgram) {
+//       console.log('buh bye');
+//     }
+//     else {
+//       await init(endProgram);
+//     }
+//   };
+
+//   init(endProgram);
+
+// while(endProgram === false) async () => {
+//   await choicePrompt();
+// }
+
+runProgram()
