@@ -29,7 +29,7 @@ async function viewDept() {
  }
 // function for view all roles
 async function viewRoles() {
-  db.query('SELECT * FROM role JOIN department ON role.department_id = department.id', function (err, results) {
+  db.query('SELECT role.id, role.title, role.department_id, department.dept_name, role.salary FROM role INNER JOIN department ON role.department_id = department.id', function (err, results) {
    if (err) {
      console.log(err)
    }
@@ -42,7 +42,7 @@ async function viewRoles() {
  }
 // function for view all employees
 async function viewEmployees() {
- db.query('SELECT * FROM employee JOIN role ON employee.role_id = role.id', function (err, results) {
+ db.query('SELECT employee.id, employee.first_name, employee.last_name, employee.role_id, role.title,  role.salary,employee.manager_id, employee.manager_name, department.dept_name FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id' , function (err, results) {
   if (err) {
     console.log(err)
   }
@@ -74,7 +74,7 @@ async function addDept() {
 var deptList
 var deptMapper
 async function deptFinder() {
-  let tempList = await db.promise().query('SELECT * FROM department')
+  let tempList = await db.promise().query('SELECT department.id, department.dept_name FROM department')
   // console.log(tempList)
     deptList = tempList[0].map(({dept_name}) => (
       `${dept_name}`
@@ -127,23 +127,23 @@ async function addRole() {
 //  var managerList
 // helper function for finding roles
  async function roleFinder() {
-  let tempList = await db.promise().query('SELECT * FROM role')
+  let tempList = await db.promise().query('SELECT role.id, role.title FROM role')
   // console.log(tempList)
-    roleList = tempList[0].map(({id, title, salary, deptartment_id}) => (
+    roleList = tempList[0].map(({title}) => (
       `${title}`
     ))
     // this makes an array to call the role id later
-    roleMapper = tempList[0].map(({id, title, salary, deptartment_id}) => (
+    roleMapper = tempList[0].map(({id, title}) => (
       {
       roleID: `${id}`,
       roleTitle: `${title}`,
     }
     ))
-    let tempEList = await db.promise().query('SELECT * FROM employee JOIN role ON employee.role_id = role.id')
+    let tempEList = await db.promise().query('SELECT employee.id, employee.role_id, employee.first_name, role.title FROM employee JOIN role ON employee.role_id = role.id')
       employeeList = tempEList[0].map(({id, role_id, first_name, title}) => (
           `${id} ${first_name} , role:${title}, roleID: ${role_id}`
       ))
-    // console.log(deptMapper);
+    // console.log(employeeList);
   }
 
 
@@ -189,27 +189,6 @@ async function addEmployee() {
 })
 }
 
-// function for update employee role
-async function roleFinder() {
-  let tempList = await db.promise().query('SELECT * FROM role')
-  // console.log(tempList)
-    roleList = tempList[0].map(({id, title, salary, deptartment_id}) => (
-      `${title}`
-    ))
-    // this makes an array to call the role id later
-    roleMapper = tempList[0].map(({id, title, salary, deptartment_id}) => (
-      {
-      roleID: `${id}`,
-      roleTitle: `${title}`,
-    }
-    ))
-    let tempEList = await db.promise().query('SELECT * FROM employee JOIN role ON employee.role_id = role.id')
-      employeeList = tempEList[0].map(({id, role_id, first_name, title}) => (
-          `${id} ${first_name} , role:${title}, roleID: ${role_id}`
-      ))
-    // console.log(deptMapper);
-  }
-
 
 // function for add an employee
 async function updateEmployeeRole() {
@@ -230,6 +209,7 @@ async function updateEmployeeRole() {
 .then(async (response) => {
  // console.log(response);
  let employeeID = response.updateTarget.split(' ')[0];
+ console.log(employeeID);
  let i = roleMapper.findIndex(x => 
    x.roleTitle === response.updateRequest)
 //  console.log(i);
