@@ -122,7 +122,7 @@ async function addRole() {
 
  var roleList
  var roleMapper
- var managerID
+//  var managerID
  var employeeList
 //  var managerList
 // helper function for finding roles
@@ -139,9 +139,9 @@ async function addRole() {
       roleTitle: `${title}`,
     }
     ))
-    let tempEList = await db.promise().query('SELECT * FROM employee')
-      employeeList = tempEList[0].map(({id, role_id, first_name}) => (
-          `firstName: ${first_name} roleID: ${role_id}`
+    let tempEList = await db.promise().query('SELECT * FROM employee JOIN role ON employee.role_id = role.id')
+      employeeList = tempEList[0].map(({id, role_id, first_name, title}) => (
+          `${id} ${first_name} , role:${title}, roleID: ${role_id}`
       ))
     // console.log(deptMapper);
   }
@@ -179,24 +179,66 @@ async function addEmployee() {
    x.roleTitle === response.employeeRole)
  console.log(i);
  let roleID = roleMapper[i].roleID;
- if (roleID-1 <= 1) {
-   managerID = 1;
- }
- else {
-   managerID = roleID - 1;
- }
+ let managerID = response.employeeManager.split(' ')[0];
+ let managerName = response.employeeManager.split(' ')[1];
+
  await db.promise().query(`
- INSERT INTO employee (role_id, first_name, last_name, manager_id)
- VALUES (${roleID},'${response.firstName}','${response.lastName}', ${managerID});
+ INSERT INTO employee (role_id, first_name, last_name, manager_id, manager_name)
+ VALUES (${roleID},'${response.firstName}','${response.lastName}', ${managerID}, '${managerName}');
  `)
 })
 }
 
-
-
 // function for update employee role
+async function roleFinder() {
+  let tempList = await db.promise().query('SELECT * FROM role')
+  // console.log(tempList)
+    roleList = tempList[0].map(({id, title, salary, deptartment_id}) => (
+      `${title}`
+    ))
+    // this makes an array to call the role id later
+    roleMapper = tempList[0].map(({id, title, salary, deptartment_id}) => (
+      {
+      roleID: `${id}`,
+      roleTitle: `${title}`,
+    }
+    ))
+    let tempEList = await db.promise().query('SELECT * FROM employee JOIN role ON employee.role_id = role.id')
+      employeeList = tempEList[0].map(({id, role_id, first_name, title}) => (
+          `${id} ${first_name} , role:${title}, roleID: ${role_id}`
+      ))
+    // console.log(deptMapper);
+  }
+
+
+// function for add an employee
 async function updateEmployeeRole() {
-  await inquirer.prompt(utilities.questionIndex.updateEmployeeRoleQ)
+  await inquirer.prompt([
+  {
+    type: "list",
+    Message: "who's role do you wish to update?",
+    name: "updateTarget",
+    choices: employeeList
+  },
+  {
+    type: "list",
+    Message: "to what role should the employee be updated to?",
+    name: "updateRequest",
+    choices: roleList
+  }
+])
+.then(async (response) => {
+ // console.log(response);
+ let employeeID = response.updateTarget.split(' ')[0];
+ let i = roleMapper.findIndex(x => 
+   x.roleTitle === response.updateRequest)
+//  console.log(i);
+ let roleID = roleMapper[i].roleID;
+
+ await db.promise().query(`
+UPDATE employee SET role_id = ${roleID} WHERE id = ${employeeID}
+ `)
+})
 }
 
 const runProgram = async () => {
@@ -224,6 +266,8 @@ await inquirer.prompt(utilities.questionIndex.initialQ).then(async (response) =>
     await addEmployee();
   }
   else if (response.nextItem === 'update an Employees Role') {
+    await deptFinder();
+    await roleFinder();
     await updateEmployeeRole();
   }
   else if (response.nextItem === 'quit') {
