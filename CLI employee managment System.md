@@ -34,7 +34,7 @@ the app is started by entering npm start in the CLI. prompts will be generated i
 Please see the linked video below.
 
 
-[![Watch the video](./Assets/Pictures/VideoScreenShot.png)](https://drive.google.com/file/d/1f-W7QcuDUiyDhp1SzdlWKlXAOf2SKnm0/view?usp=share_link)
+[![Watch the video](./Assets/VideoScreenShot.png)](https://drive.google.com/file/d/1f-W7QcuDUiyDhp1SzdlWKlXAOf2SKnm0/view?usp=share_link)
 
 
 
