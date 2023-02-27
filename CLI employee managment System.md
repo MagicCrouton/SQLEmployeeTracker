@@ -29,7 +29,9 @@ the schema file will create tables based on employee_db, end user must only prov
 
 ## Usage
 
-the app is started by entering npm start in the CLI. prompts will be generated in the CLI to maintain and modify your company team. Please see the linked video below.
+the app is started by entering npm start in the CLI. prompts will be generated in the CLI to maintain and modify your company team. The options menu will seem to dissapear after making an entry but if you arrow key up or down the menu will re populate to continue usage.
+
+Please see the linked video below.
 
 
 [![Watch the video](./Assets/Pictures/VideoScreenShot.png)](https://drive.google.com/file/d/1f-W7QcuDUiyDhp1SzdlWKlXAOf2SKnm0/view?usp=share_link)
