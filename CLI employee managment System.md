@@ -18,10 +18,21 @@ This application provides a way to manage a business organizational structure wi
 ## Installation
 
 User will have to have mySQL installed onto his/her local machine, then run the schema.sql file in the db folder to set up the database. Run npm i in the CLI and the app will be ready to use. the optional seed.sql file can be run to test the functionality if needed.
+for user credentials, end user must create a .env file with the following values populated
+
+db_host = localhost
+user_name = <mySQL User Name>
+sql_PW = <mySQL Password>
+db = employee_db
+
+the schema file will create tables based on employee_db, end user must only provide the user name and password to their local instance of mySQL.
 
 ## Usage
 
 the app is started by entering npm start in the CLI. prompts will be generated in the CLI to maintain and modify your company team. Please see the linked video below.
+
+
+[![Watch the video](./Assets/Pictures/VideoScreenShot.png)](https://drive.google.com/file/d/1f-W7QcuDUiyDhp1SzdlWKlXAOf2SKnm0/view?usp=share_link)
 
 
 
